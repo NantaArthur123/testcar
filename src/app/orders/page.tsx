@@ -1,10 +1,11 @@
 "use client";
 
-import { orders } from "@/types/cars";
+import { cars, orders } from "@/types/cars";
 import { useState } from "react";
 
 export default function Order() {
   const [order, setOrder] = useState<orders[]>([]);
+  const [car, setCar] = useState<cars[]>([]);
 
   return (
     <>
@@ -13,32 +14,31 @@ export default function Order() {
       </h1>
       <form>
         <div className="flex flex-col gap-2 m-2 p-4 bg-gray-800 rounded">
+          <select className="bg-gray-300 rounded p-1 text-black">
+            <option>Select Car</option>
+            {car.map((car) => (
+              <option value=""></option>
+            ))}
+          </select>
           <div>
-            <span>Car Name:</span>
+            <span>Order Date:</span>
             <input
-              type="text"
+              type="date"
               className="bg-gray-300 rounded ms-2 text-black p-1 ps-4"
-              placeholder="Add new car name.."
             />
           </div>
           <div>
-            <span>Day Rate:</span>
+            <span>Pickup Date:</span>
             <input
-              type="number"
-              name=""
-              id=""
+              type="date"
               className="bg-gray-300 rounded ms-2 text-black p-1 ps-4"
-              placeholder="Rp. 300.000"
             />
           </div>
           <div>
-            <span>Month Rate:</span>
+            <span>Dropoff Date:</span>
             <input
-              type="number"
-              name=""
-              id=""
+              type="date"
               className="bg-gray-300 rounded ms-2 text-black p-1 ps-4"
-              placeholder="Rp. 9.000.000.."
             />
           </div>
           <div>

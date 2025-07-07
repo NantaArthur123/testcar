@@ -10,6 +10,7 @@ export default function Home() {
   const [newDayRate, setNewDayRate] = useState("");
   const [newMonthRate, setNewMonthRate] = useState("");
   const [newCarImage, setNewCarImage] = useState("");
+  const [editingCarID, setEditingCarID] = useState<number | null>(null);
 
   useEffect(() => {
     const fetchCars = async () => {
@@ -26,8 +27,8 @@ export default function Home() {
       method: "POST",
       body: JSON.stringify({
         car_name: newCarName,
-        day_rate: newDayRate,
-        month_rate: newMonthRate,
+        day_rate: parseFloat(newDayRate),
+        month_rate: parseFloat(newMonthRate),
         image: newCarImage,
       }),
       headers: {
@@ -49,16 +50,25 @@ export default function Home() {
     );
   };
 
-  const handleEdit = async (id: string) => {
-    await fetch("/api/carss/${id}", {
-      method: "EDIT",
+  const handleEdit = async (id: number) => {
+    const dat = await fetch("/api/cars/${id}", {
+      method: "PATCH",
       body: JSON.stringify({
         car_name: newCarName,
-        day_rate: newDayRate,
-        month_rate: newMonthRate,
+        day_rate: parseFloat(newDayRate),
+        month_rate: parseFloat(newMonthRate),
         image: newCarImage,
       }),
+      headers: {
+        "Content-Type": "application/json",
+      },
     });
+    if (dat.ok) {
+      const updateCar = await dat.json();
+      setCars(cars.map((cars) => (cars.car_id == id ? updateCar[0] : cars)));
+    } else {
+      console.error("Failed to update");
+    }
   };
 
   return (
@@ -112,7 +122,7 @@ export default function Home() {
           </div>
           <div>
             <button
-              className="bg-gray-300 text-black rounded p-1"
+              className="bg-gray-300 text-black rounded p-1 cursor-pointer"
               onClick={handleSubmit}
               type="submit"
             >
@@ -164,9 +174,28 @@ export default function Home() {
           </h1>
           <div className="flex flex-col gap-2">
             <div>
-              <button className="bg-gray-300 rounded ms-2 text-black p-1 ps-4 w-full">
-                Pick ID
-              </button>
+              <select
+                className="w-40 bg-gray-300 text-black"
+                onChange={(e) => {
+                  const selected = cars.find(
+                    (car) => car.car_id == Number(e.target.value)
+                  );
+                  if (selected) {
+                    setNewCarName(selected.car_name);
+                    setNewDayRate(String(selected.day_rate));
+                    setNewMonthRate(String(selected.month_rate));
+                    setNewCarImage(selected.image);
+                    setEditingCarID(selected.car_id);
+                  }
+                }}
+              >
+                <option>Select Car to Edit</option>
+                {cars.map((car) => (
+                  <option key={car.car_id} value={car.car_id}>
+                    {car.car_name}
+                  </option>
+                ))}
+              </select>
             </div>
             <div>
               <span>Car Name:</span>
@@ -212,8 +241,11 @@ export default function Home() {
             </div>
             <div>
               <button
-                className="bg-gray-300 text-black rounded p-1"
-                onClick={handleSubmit}
+                className="bg-gray-300 text-black rounded p-1 cursor-pointer"
+                onClick={(e) => {
+                  e.preventDefault();
+                  if (editingCarID !== null) handleEdit(editingCarID);
+                }}
                 type="submit"
               >
                 SUBMIT
