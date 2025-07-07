@@ -1,103 +1,166 @@
-import Image from "next/image";
+"use client";
+
+import { cars } from "@/types/cars";
+import { useState } from "react";
 
 export default function Home() {
-  return (
-    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-      <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="list-inside list-decimal text-sm/6 text-center sm:text-left font-[family-name:var(--font-geist-mono)]">
-          <li className="mb-2 tracking-[-.01em]">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] px-1 py-0.5 rounded font-[family-name:var(--font-geist-mono)] font-semibold">
-              src/app/page.tsx
-            </code>
-            .
-          </li>
-          <li className="tracking-[-.01em]">
-            Save and see your changes instantly.
-          </li>
-        </ol>
+  const [car, setCar] = useState<cars[]>([]);
+  const [newCarName, setNewCarName] = useState("");
+  const [newDayRate, setNewDayRate] = useState("");
+  const [newMonthRate, setNewMonthRate] = useState("");
+  const [newCarImage, setNewCarImage] = useState("");
+  const [filterPrice, setFilterPrice] = useState(0);
+  const handleFilterbyPrice = (e: number) => {
+    setFilterPrice(e);
+    console.log(filterPrice);
+  };
+  const handleSubmit = () => {
+    const newcar = {
+      car_id: Date.now(),
+      car_name: newCarName,
+      day_rate: newDayRate,
+      month_rate: newMonthRate,
+      image: newCarImage,
+    };
 
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:w-auto"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
+    setCar([...car, newcar]);
+  };
+
+  return (
+    <>
+      <h1 className="text-2xl font-black flex justify-center items-center">
+        Rental App
+      </h1>
+      <>
+        <div className="flex flex-col gap-2 m-2 p-4 bg-gray-800 rounded">
+          <div>
+            <span>Car Name:</span>
+            <input
+              type="text"
+              className="bg-gray-300 rounded ms-2 text-black p-1 ps-4"
+              placeholder="Add new car name.."
+              onChange={(e) => setNewCarName(e.target.value)}
             />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 w-full sm:w-auto md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
+          </div>
+          <div>
+            <span>Day Rate:</span>
+            <input
+              type="number"
+              name=""
+              id=""
+              className="bg-gray-300 rounded ms-2 text-black p-1 ps-4"
+              placeholder="Rp. 300.000"
+              onChange={(e) => setNewDayRate(e.target.value)}
+            />
+          </div>
+          <div>
+            <span>Month Rate:</span>
+            <input
+              type="number"
+              name=""
+              id=""
+              className="bg-gray-300 rounded ms-2 text-black p-1 ps-4"
+              placeholder="Rp. 9.000.000.."
+              onChange={(e) => setNewMonthRate(e.target.value)}
+            />
+          </div>
+          <div>
+            <span>Image URL:</span>
+            <input
+              type="text"
+              name=""
+              id=""
+              className="bg-gray-300 rounded ms-2 text-black p-1 ps-4"
+              placeholder="img url.."
+              onChange={(e) => setNewCarImage(e.target.value)}
+            />
+          </div>
+          <div>
+            <button
+              className="bg-gray-300 text-black rounded p-1"
+              onClick={handleSubmit}
+            >
+              SUBMIT
+            </button>
+          </div>
         </div>
-      </main>
-      <footer className="row-start-3 flex gap-[24px] flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
-    </div>
+      </>
+      <div className=" bg-gray-800 m-2 p-4 rounded">
+        <h2 className="text-xl flex flex-col justify-center items-center font-bold mb-2">
+          Current Data
+        </h2>
+        <div className="flex flex-row gap-2">
+          <span>Filter: </span>
+          <div className="">
+            <input
+              type="checkbox"
+              className="cursor-pointer"
+              onChange={() => handleFilterbyPrice(35000000)}
+              checked={filterPrice == 35000000}
+            />
+            <button
+              className="ps-2 cursor-pointer"
+              onClick={() => handleFilterbyPrice(35000000)}
+            >
+              Under 35.000.000
+            </button>
+          </div>
+          <div className="">
+            <input
+              type="checkbox"
+              className="cursor-pointer"
+              onChange={() => handleFilterbyPrice(55000000)}
+              checked={filterPrice == 55000000}
+            />
+            <button
+              className="ps-2 cursor-pointer"
+              onClick={() => handleFilterbyPrice(55000000)}
+            >
+              Under 55.000.000
+            </button>
+          </div>
+          <div className="">
+            <input
+              type="checkbox"
+              className="cursor-pointer"
+              onChange={() => handleFilterbyPrice(75000000)}
+              checked={filterPrice == 75000000}
+            />
+            <button
+              className="ps-2 cursor-pointer"
+              onClick={() => handleFilterbyPrice(75000000)}
+            >
+              More Than 75.000.000
+            </button>
+          </div>
+        </div>
+        <div className="bg-gray-700 rounded">
+          <table className="table-fixed w-full">
+            <thead>
+              <tr>
+                <th className="bg-gray-500 rounded-tl p-1">Name</th>
+                <th className="bg-gray-500  p-1">Day Rate</th>
+                <th className="bg-gray-500  p-1">Month Rate</th>
+                <th className="bg-gray-500  p-1">Image URL</th>
+                <th className="bg-gray-500 rounded-tr p-1">Delete</th>
+              </tr>
+            </thead>
+            <tbody>
+              {car.map((car) => (
+                <tr key={car.car_id}>
+                  <td className="p-1">{car.car_name}</td>
+                  <td className="bg-gray-600 p-1">{car.day_rate}</td>
+                  <td className="p-1">{car.month_rate}</td>
+                  <td className="bg-gray-600 p-1">{car.image_url}</td>
+                  <td className="p-1">
+                    <button className="cursor-pointer">Delete</button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </>
   );
 }
